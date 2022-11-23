@@ -17,15 +17,17 @@
         - Squeeth strategies FAQ 
 	    - Squeeth Resources
 	    - Auctions - Crab v2
+- [Goerli deployment](https://goerli.etherscan.io/address/0xf3e40abf4c06b9454440cb93d42e60de5e67db2a)
+
 
 # On-chain context
 
-
-
-- DEPLOYMENT: [goerli](https://goerli.etherscan.io/address/0xf3e40abf4c06b9454440cb93d42e60de5e67db2a)
-- ERC20: [Sqth, Crab, WETH, USDC]
-- ERC721: uni-V3 if you lp for sqth-eth
-- ADMIN: [contract is ownable; and there are some onlyOwner functions]
+```
+DEPLOYMENT: MAINNET
+ERC20: Sqth, Crab, WETH, USDC
+ERC721: uni-V3 if you lp for sqth-eth
+ADMIN: restricted to specific actions
+```
 
 
 # Tests
