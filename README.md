@@ -15,19 +15,30 @@
 
 # On-chain context
 
-TO FILL IN BY PROTOCOL
 
 ```
-DEPLOYMENT: [e.g. mainnet, arbitrum, optimism, ..]
-ERC20: [e.g. any, none, USDC, USDC and USDT]
-ERC721: [e.g. any, none, UNI-V3]
-ADMIN: [trusted, restricted, n/a]
+DEPLOYMENT: [goerli](https://goerli.etherscan.io/address/0xf3e40abf4c06b9454440cb93d42e60de5e67db2a)
+ERC20: [Sqth, Crab, WETH, USDC]
+ERC721: uni-V3 if you lp for sqth-eth
+ADMIN: [contract is ownable; and there are some onlyOwner functions]
 ```
+
+# Tests
+
+Install [forge](https://book.getfoundry.sh/getting-started/installation)
+open .env and add in your API for your RPC_ENDPOINT
+`cd crab-netting`
+`forge test`
 
 # Audit scope
 
-TBD
+The following contracts are in scope
+1. CrabNetting.sol (its interfaces)
+and its dependencies
+CrabStrategyV2.sol
+Controller.sol
 
 # About Opyn
 
-TBD
+Opyn builds DeFi-native derivatives and options infrastructure. Opyn built DeFi's first options protocol and has since grown into a flourishing product ecosystem and global community that has collectively traded more than $4 billion of notional volume across 45,000+ trades, and we're just getting started.
+
