@@ -12,6 +12,11 @@
 - [Crab Netting](https://opynopyn.notion.site/Crab-Netting-Blurb-d4ce8a3c75694c54af03b3997a70be0c)
 - [Twitter](https://twitter.com/opyn_)
 - [Website](https://www.opyn.co/)
+- [Squeeth gitbook](https://opyn.gitbook.io/squeeth/resources/squeeth-faq)
+Note the sections on:
+Squeeth strategies FAQ (Bull uses the Crab strategy)
+	Squeeth Resources
+	Auctions - Crab v2
 
 # On-chain context
 
@@ -37,6 +42,8 @@ The following contracts are in scope
 and its dependencies
 CrabStrategyV2.sol
 Controller.sol
+
+You can find the dependencies inside this [repo](https://github.com/opynfinance/squeeth-monorepo/)
 
 # About Opyn
 
