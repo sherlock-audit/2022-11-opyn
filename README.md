@@ -13,35 +13,32 @@
 - [Twitter](https://twitter.com/opyn_)
 - [Website](https://www.opyn.co/)
 - [Squeeth gitbook](https://opyn.gitbook.io/squeeth/resources/squeeth-faq)
-Note the sections on:
-Squeeth strategies FAQ (Bull uses the Crab strategy)
-	Squeeth Resources
-	Auctions - Crab v2
+    - Note the sections on:
+        - Squeeth strategies FAQ 
+	    - Squeeth Resources
+	    - Auctions - Crab v2
 
 # On-chain context
 
 
-```
-DEPLOYMENT: [goerli](https://goerli.etherscan.io/address/0xf3e40abf4c06b9454440cb93d42e60de5e67db2a)
-ERC20: [Sqth, Crab, WETH, USDC]
-ERC721: uni-V3 if you lp for sqth-eth
-ADMIN: [contract is ownable; and there are some onlyOwner functions]
-```
+
+- DEPLOYMENT: [goerli](https://goerli.etherscan.io/address/0xf3e40abf4c06b9454440cb93d42e60de5e67db2a)
+- ERC20: [Sqth, Crab, WETH, USDC]
+- ERC721: uni-V3 if you lp for sqth-eth
+- ADMIN: [contract is ownable; and there are some onlyOwner functions]
+
 
 # Tests
 
-Install [forge](https://book.getfoundry.sh/getting-started/installation)
-open .env and add in your API KEY for your RPC_ENDPOINT
-`cd crab-netting`
-`forge test`
+- Install [forge](https://book.getfoundry.sh/getting-started/installation)
+- open .env and add in your API KEY for your RPC_ENDPOINT
+- `cd crab-netting`
+- `forge test`
 
 # Audit scope
 
 The following contracts are in scope
-1. CrabNetting.sol (its interfaces)
-and its dependencies
-CrabStrategyV2.sol
-Controller.sol
+1. CrabNetting.sol (its interfaces) and its dependencies CrabStrategyV2.sol, Controller.sol
 
 You can find the dependencies inside this [repo](https://github.com/opynfinance/squeeth-monorepo/)
 
