@@ -1,0 +1,186 @@
+type Vault @entity {
+  id: ID!
+  shortAmount: BigInt!
+  collateralAmount: BigInt!
+  NftCollateralId: BigInt
+  operator: Bytes
+  owner: Account!
+}
+
+type Account @entity {
+  id: ID!
+  vaults: [Vault!]! @derivedFrom(field: "owner")
+  vaultCount: BigInt!
+}
+
+type Liquidation @entity {
+  id: ID!
+  vaultId: BigInt!
+  debtAmount: BigInt!
+  collateralPaid: BigInt!
+  liquidator: Bytes!
+  timestamp: BigInt!
+}
+
+type NormalizationFactorUpdate @entity {
+  id: ID!
+  oldNormFactor: BigInt!
+  newNormFactor: BigInt!
+  lastModificationTimestamp: BigInt!
+  timestamp: BigInt!
+}
+
+type HourStatSnapshot @entity {
+  id: ID!
+  timestamp: BigInt!
+  totalCollateralAmount: BigInt!
+}
+
+type DayStatSnapshot @entity {
+  id: ID!
+  timestamp: BigInt!
+  totalCollateralAmount: BigInt!
+}
+
+enum Action {
+  WITHDRAW_COLLAT
+  DEPOSIT_COLLAT
+  OPEN_SHORT
+  CLOSE_SHORT
+  MINT
+  BURN
+  LIQUIDATE
+}
+
+type VaultHistory @entity {
+  id: ID!
+  from: Bytes!
+  sender: Bytes!
+  txid: String!
+  timestamp: BigInt!
+  totalEthCollateralAmount: BigInt!
+  oSqthAmount: BigInt!
+  ethCollateralAmount: BigInt!
+  action: Action!
+  vaultId: BigInt!
+}
+
+type CrabStrategyTx @entity {
+  id: ID!
+  type: String!
+  lpAmount: BigInt
+  ethAmount: BigInt!
+  wSqueethAmount: BigInt
+  owner: Bytes
+  isSellingSqueeth: Boolean
+  timestamp: BigInt!
+  auctionPrice: BigInt
+  wSqueethHedgeTargetAmount: BigInt
+  ethHedgeTargetAmount: BigInt
+  hedgerPrice: BigInt
+}
+
+type CrabAuction @entity {
+  id: ID!
+  isSellingSqueeth: Boolean!
+  squeethAmount: BigInt!
+  ethAmount: BigInt!
+  isHedgingOnUniswap: Boolean!
+  owner: Bytes!
+  timestamp: BigInt!
+}
+
+type CrabHedgeTimeThreshold @entity {
+  id: ID!
+  threshold: BigInt!
+  timestamp: BigInt!
+}
+
+type TimeLockTx @entity {
+  id: ID!
+  target: Bytes!
+  value: BigInt!
+  signature: String!
+  data: Bytes
+  eta: BigInt!
+  queued: Boolean
+  timestamp: BigInt!
+}
+
+type ExecuteTimeLockTx @entity {
+  id: ID!
+  timelocktx: TimeLockTx!
+  timestamp: BigInt!
+}
+
+type HedgeOTC @entity {
+  id: ID!
+  bidID: BigInt!
+  quantity: BigInt!
+  isBuying: Boolean!
+  clearingPrice: BigInt!
+  timestamp: BigInt!
+}
+
+type HedgeOTCSingle @entity {
+  id: ID!
+  trader: Bytes!
+  bidID: BigInt!
+  quantity: BigInt!
+  price: BigInt!
+  isBuying: Boolean!
+  clearingPrice: BigInt!
+  hedgeOTC: HedgeOTC!
+  timestamp: BigInt!
+}
+
+type SetStrategyCap @entity {
+  id: ID!
+  cap: BigInt!
+  timestamp: BigInt!
+}
+
+type SetHedgingTwapPeriod @entity {
+  id: ID!
+  hedging: BigInt!
+  timestamp: BigInt!
+}
+
+type SetHedgePriceThreshold @entity {
+  id: ID!
+  threshold: BigInt!
+  timestamp: BigInt!
+}
+
+type SetOTCPriceTolerance @entity {
+  id: ID!
+  tolerance: BigInt!
+  timestamp: BigInt!
+}
+
+type VaultTransferred @entity {
+  id: ID!
+  vaultID: BigInt!
+  strategy: Bytes!
+  timestamp: BigInt!
+}
+
+type CrabUserTx @entity {
+  id: ID!
+  owner: Bytes!
+  user: Bytes!
+  lpAmount: BigInt
+  ethAmount: BigInt!
+  wSqueethAmount: BigInt
+  type: String!
+  timestamp: BigInt!
+  erc20Token: String
+  erc20Amount: BigInt
+  excessEth: BigInt
+}
+
+type Strategy @entity {
+  id: ID!
+  totalSupply: BigInt!
+  vaultId: BigInt!
+}

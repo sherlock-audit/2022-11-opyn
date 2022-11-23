@@ -1,0 +1,184 @@
+version: 2.1
+orbs:
+  coveralls: coveralls/coveralls@1.0.6
+  node: circleci/node@1.1.6
+
+workflows:
+  build-test-report:
+    jobs:
+      - checkout-and-install
+      - compile:
+          requires:
+            - checkout-and-install
+      - lint:
+          requires:
+            - compile
+      - unit-test-contracts:
+          requires:
+            - compile
+      - integration-test-contracts:
+          requires:
+            - compile
+      - contract-size:
+          requires:
+            - compile
+      - e2e-test:
+          requires:
+            - compile
+      - checkout-and-install-frontend
+      - unit-test-frontend:
+          requires:
+            - checkout-and-install-frontend
+
+jobs:
+  checkout-and-install:
+    working_directory: ~/squeeth/packages/hardhat
+    docker:
+      - image: cimg/node:16.6.0
+    steps:
+      - checkout:
+          path: ~/squeeth
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Install packages
+          command: yarn install
+      - save_cache: 
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+      - save_cache:
+          key: squeeth-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/squeeth
+
+  compile:
+    working_directory: ~/squeeth/packages/hardhat
+    docker:
+      - image: cimg/node:16.6.0
+    steps:
+      - checkout:
+          path: ~/squeeth
+      - restore_cache:
+          key: squeeth-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Compile Contracts
+          command: npx hardhat compile
+      - save_cache: 
+         key: typechain-cache-{{ .Environment.CIRCLE_SHA1 }}
+         paths:
+           - typechain
+      - save_cache: 
+         key: artifacts-cache-{{ .Environment.CIRCLE_SHA1 }}
+         paths:
+           - artifacts
+
+  lint:
+    working_directory: ~/squeeth/packages/hardhat
+    docker:
+      - image: cimg/node:16.6.0
+    steps:
+      - checkout:
+          path: ~/squeeth
+      - restore_cache:
+          key: squeeth-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          key: typechain-cache-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Lint
+          command: yarn lint:check
+  
+  unit-test-contracts:
+    working_directory: ~/squeeth/packages/hardhat
+    docker:
+      - image: cimg/node:16.6.0
+    steps:
+      - checkout:
+          path: ~/squeeth
+      - restore_cache:
+          key: squeeth-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          key: typechain-cache-{{ .Environment.CIRCLE_SHA1 }}
+      - run: 
+          name: Unit tests
+          command: yarn test:crab-unit
+  
+  integration-test-contracts:
+    working_directory: ~/squeeth/packages/hardhat
+    docker:
+      - image: cimg/node:16.6.0
+    steps:
+      - checkout:
+          path: ~/squeeth
+      - restore_cache:
+          key: squeeth-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          key: typechain-cache-{{ .Environment.CIRCLE_SHA1 }}
+      - run: 
+          name: Integration tests
+          command: yarn test:crab-integration
+    
+  contract-size:
+    working_directory: ~/squeeth/packages/hardhat
+    docker:
+      - image: cimg/node:16.6.0
+    steps:
+      - checkout:
+          path: ~/squeeth
+      - restore_cache:
+          key: squeeth-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          key: artifacts-cache-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Check Contracts Size
+          command: npx hardhat size-contracts
+
+  e2e-test:
+    working_directory:  ~/squeeth/packages/hardhat
+    docker:
+      - image: cimg/node:16.6.0
+    steps:
+      - restore_cache:
+          key: squeeth-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          key: typechain-cache-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Set Env Variables
+          command: echo "export ALCHEMY_KEY=${ALCHEMY_KEY}" >> $BASH_ENV
+      - run:
+          name: Mainnet E2E Test 
+          command: yarn test:e2e
+
+  checkout-and-install-frontend:
+    working_directory: ~/squeeth/packages/frontend
+    docker:
+      - image: cimg/node:16.6.0
+    steps:
+      - checkout:
+          path: ~/squeeth
+      - restore_cache:
+          key: dependency-frontend-cache-{{ checksum "package.json" }}
+      - run:
+          name: Install packages
+          command: yarn install
+      - save_cache: 
+          key: dependency-frontend-cache-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+      - save_cache:
+          key: squeeth-frontend-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/squeeth
+  
+  unit-test-frontend:
+    working_directory: ~/squeeth/packages/frontend
+    docker:
+      - image: cimg/node:16.6.0
+    steps:
+      - checkout:
+          path: ~/squeeth
+      - restore_cache:
+          key: squeeth-frontend-{{ .Environment.CIRCLE_SHA1 }}
+      - run: 
+          name: Unit tests
+          command: yarn test:ci
